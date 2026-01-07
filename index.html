@@ -52,10 +52,13 @@ const terms=["춘분","청명","곡우","입하","소만","망종","하지","소
 const branches=["자","축","인","묘","진","사","오","미","신","유","술","해"];
 
 function calc(){
+
+  alert("SPICE loaded: " + typeof spice);
+  
   spice.kclear();
   spice.furnsh("naif0012.tls");
   spice.furnsh("pck00010.tpc");
-  spice.furnsh("https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp");
+  spice.furnsh("https://cdn.jsdelivr.net/gh/sky-chronos/nasa-kernels@main/de440s.bsp");
 
   const d=document.getElementById("date").value;
   const t=document.getElementById("time").value;
@@ -90,3 +93,4 @@ function copy(){
 </script>
 </body>
 </html>
+
