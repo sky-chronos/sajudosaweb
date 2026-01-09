@@ -3,7 +3,8 @@
    - 사주 4주
    - 대운 / 세운 / 월운
    - 결과 복사 / GPT 복사
-   - 입력값 localStorage 기억
+   - 입력값 기억(localStorage)
+   - 입력 초기화(reset)
 ====================================================== */
 
 const STORAGE_KEY = "saju_dosa_input_v1";
@@ -16,6 +17,7 @@ function mod(n,m){ return ((n%m)+m)%m; }
 function getCalendarType(){
   return document.querySelector('input[name="calendarType"]:checked').value;
 }
+
 function updateUI(){
   const isLunar = getCalendarType()==="lunar";
   $("engineRow").classList.toggle("hidden", !isLunar);
@@ -62,6 +64,29 @@ function loadInputs(){
   }
 }
 
+/* ================= 입력 초기화 ================= */
+function resetInputs(){
+  localStorage.removeItem(STORAGE_KEY);
+
+  document.querySelector('input[name="calendarType"][value="solar"]').checked = true;
+  $("lunarEngine").value = "universal";
+  $("isLeapMonth").value = "false";
+
+  $("year").value = "1990";
+  $("month").value = "1";
+  $("day").value = "1";
+  $("hour").value = "12";
+  $("minute").value = "0";
+
+  updateUI();
+
+  $("msg").textContent = "";
+  $("err").textContent = "";
+  $("debug").textContent = "";
+
+  alert("입력값이 초기화되었습니다.");
+}
+
 /* ================= KASI ================= */
 function lunarToSolar_KASI(y,m,d,isLeap){
   if(typeof KoreanLunarCalendar==="undefined")
@@ -72,6 +97,7 @@ function lunarToSolar_KASI(y,m,d,isLeap){
   const s = cal.getSolarCalendar();
   return { year:s.year, month:s.month, day:s.day };
 }
+
 function lunarToSolar_UniversalBlocked(){
   throw new Error("범용 음력 엔진은 비활성화됨. KASI 사용");
 }
@@ -88,12 +114,14 @@ function yearPillar(y,m,d){
     branch: BRANCHES[mod(useYear-4,12)]
   };
 }
+
 function monthPillar(y,m){
   return {
     stem: STEMS[mod(y*12+m,10)],
     branch: BRANCHES[mod(m+1,12)]
   };
 }
+
 function dayPillar(y,m,d){
   const base = new Date(1900,0,1);
   const cur  = new Date(y,m-1,d);
@@ -103,6 +131,7 @@ function dayPillar(y,m,d){
     branch: BRANCHES[mod(diff,12)]
   };
 }
+
 function hourPillar(dayStem,h){
   const br = Math.floor((h+1)/2)%12;
   const st = mod(STEMS.indexOf(dayStem)*2+br,10);
@@ -184,7 +213,7 @@ ${luck}
     $("msg").textContent = "계산 완료";
     $("debug").textContent = out;
 
-    saveInputs(); // ⭐ 입력값 저장
+    saveInputs();
 
   }catch(e){
     $("err").textContent = e.message;
@@ -216,7 +245,9 @@ function init(){
   });
   $("lunarEngine").addEventListener("change",updateUI);
   $("btnCalc").addEventListener("click",onCalc);
+  $("btnReset").addEventListener("click", resetInputs);
   updateUI();
-  loadInputs(); // ⭐ 입력값 복원
+  loadInputs();
 }
+
 init();
