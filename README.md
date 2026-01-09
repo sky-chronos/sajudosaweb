@@ -1,4 +1,4 @@
-# 사주도사 (Saju Dosa)
+# 사주도사 (Saju Dosa) v1.0.0
 무료 · 공개 사주 계산 웹도구  
 (KASI 기준 · GitHub Pages 실행)
 
