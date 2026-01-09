@@ -1,4 +1,4 @@
-/* app.js – STEP 4-1 */
+/* app.js – STEP 4-1 (결과 출력 FIX 완료본) */
 
 function $(id) {
   return document.getElementById(id);
@@ -54,7 +54,7 @@ function lunarToSolar_KASI(y, m, d, isLeap) {
   };
 }
 
-/* 범용 엔진은 의도적으로 차단 */
+/* 범용 엔진은 차단 */
 function lunarToSolar_UniversalBlocked() {
   throw new Error(
     "범용 음력 변환 엔진은 정확도 이슈로 비활성화되었습니다.\n" +
@@ -63,19 +63,16 @@ function lunarToSolar_UniversalBlocked() {
 }
 
 /* ================= STEP 4-1 핵심 ================= */
-/* 👉 여기서 ‘확정된 양력’을 기존 사주 계산 엔진에 넘긴다 */
+/* 확정된 양력 → (임시) 사주 계산 엔진 */
 
 function computeSajuWithSolarDate(solar) {
   const hour = Number($("hour").value);
   const minute = Number($("minute").value);
 
-  /* 지금 단계에서는 더미 계산 */
-  /* 다음 단계에서 여기를 기존 사주 엔진으로 교체 */
-
   return {
     solarResolved: `${solar.year}-${pad2(solar.month)}-${pad2(solar.day)}`,
     time: `${pad2(hour)}:${pad2(minute)}`,
-    message: "양력 확정 → 사주 계산 엔진 연결 성공 (STEP 4-1)",
+    message: "STEP 4-1 성공: 양력 확정 → 사주 계산 엔진 전달 완료"
   };
 }
 
@@ -107,6 +104,7 @@ function onCalc() {
 
     const result = computeSajuWithSolarDate(solar);
 
+    /* 🔴 핵심 FIX: 결과를 화면에 반드시 출력 */
     $("msg").textContent =
       `입력(${calendarType === "lunar" ? "음력" : "양력"}) → ` +
       `사주 계산용 양력 확정: ${result.solarResolved}`;
@@ -117,14 +115,19 @@ function onCalc() {
           calendarType,
           engine,
           isLeap,
-          y, m, d
+          year: y,
+          month: m,
+          day: d,
+          hour: $("hour").value,
+          minute: $("minute").value
         },
-        solarResolved: solar,
+        solarResolved: result.solarResolved,
         result
       },
       null,
       2
     );
+
   } catch (e) {
     $("err").textContent = e.message;
   }
