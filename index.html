@@ -332,10 +332,36 @@ function calc(){
     `${q.note} (가장 가까운 경계: ${nearer.which} ${nearer.obj.name} @ UTC ${nearer.cross.utcIso}, Δ ${nearer.cross.minutesDelta.toFixed(1)}분)`;
 
   const raw =
-`[SKY CHRONOS v4 — NASA-style solar longitude model]
+`[SC-PACK v1]
+engine=SkyChronos
+model=NASA-style apparent solar longitude
+time_standard=UTC
+input_kst=${dateStr} ${timeStr}
+input_utc=${utcIso}
+
+solar_longitude_deg=${lon.toFixed(9)}
+solar_term=${term}
+solar_term_boundary=${prev.name} -> ${next.name}
+
+month_branch=${monthB}
+hour_branch=${hourB}
+
+nearest_boundary_name=${nearer.obj.name}
+nearest_boundary_utc=${nearer.cross.utcIso}
+delta_to_boundary_min=${nearer.cross.minutesDelta.toFixed(1)}
+
+quality=${q.score}
+risk_label=${q.score==="HIGH"?"STABLE":"EDGE"}
+risk_rule=abs(delta_min)>=720 => STABLE
+
+note_boundary=${q.note}
+note_method=${mode==="apparent"?"NASA apparent longitude (nutation+aberration approx)":"Mean longitude"}
+[/SC-PACK]
+
+[SKY CHRONOS v4 — NASA-style solar longitude model]
 Input (KST): ${dateStr} ${timeStr}
 UTC: ${utcIso}
-Mode: ${mode} (${mode==="apparent" ? "apparent longitude (nutation+aberration approx)" : "mean longitude (debug)"})
+Mode: ${mode}
 
 Solar longitude λ: ${lon.toFixed(9)} deg
 Solar-term: ${term}
@@ -361,6 +387,7 @@ ${mode==="apparent" ? ("Omega: "+astro.Omega.toFixed(8)) : ""}
 Notes:
 - This output is a computation log. Not a fortune-telling statement.
 - For boundary-close cases, compare interpretations under both adjacent solar-terms/month-branches.
+
 `;
   document.getElementById("raw").textContent = raw;
 }
@@ -373,4 +400,5 @@ function copyGPT(){
 </script>
 </body>
 </html>
+
 
