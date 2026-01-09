@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>사주도사 – STEP4-1 테스트</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Noto Sans KR", sans-serif;
+      margin: 24px;
+      line-height: 1.5;
+    }
+    .card {
+      max-width: 760px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    h1 { margin-top: 0; }
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    input, select, button {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      cursor: pointer;
+    }
+    .hidden { display: none; }
+    .ok { color: #0a7; font-weight: 700; }
+    .err { color: #c00; font-weight: 700; white-space: pre-wrap; }
+    pre {
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 14px;
+      overflow: auto;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: #f2f2f2;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>사주도사 – STEP 4-1</h1>
+  <p>
+    음력/윤달 입력 → <b>KASI 기준 양력 확정</b> →
+    <b>사주 계산 엔진으로 전달</b>까지 연결 테스트
+  </p>
+
+  <h3>달력 선택</h3>
+  <div class="row">
+    <label>
+      <input type="radio" name="calendarType" value="solar" checked />
+      양력
+    </label>
+    <label>
+      <input type="radio" name="calendarType" value="lunar" />
+      음력
+    </label>
+    <span class="pill" id="engineBadge">엔진: 범용</span>
+  </div>
+
+  <div class="row hidden" id="engineRow">
+    <label>
+      음력 변환 엔진
+      <select id="lunarEngine">
+        <option value="universal">범용(차단)</option>
+        <option value="kasi">KASI(오프라인)</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="row hidden" id="leapRow">
+    <label>
+      윤달 여부
+      <select id="isLeapMonth">
+        <option value="false">평달</option>
+        <option value="true">윤달</option>
+      </select>
+    </label>
+  </div>
+
+  <h3>출생 정보</h3>
+  <div class="row">
+    <label>년 <input id="year" type="number" value="1990"></label>
+    <label>월 <input id="month" type="number" value="1"></label>
+    <label>일 <input id="day" type="number" value="1"></label>
+  </div>
+  <div class="row">
+    <label>시 <input id="hour" type="number" value="12"></label>
+    <label>분 <input id="minute" type="number" value="0"></label>
+  </div>
+
+  <button id="btnCalc">계산 실행</button>
+
+  <h3>결과</h3>
+  <div id="msg" class="ok"></div>
+  <div id="err" class="err"></div>
+  <pre id="debug"></pre>
+</div>
+
+<!-- KASI 오프라인 음력 엔진 -->
+<script src="./vendor/korean-lunar-calendar.min.js"></script>
+<!-- 메인 로직 -->
+<script src="./app.js"></script>
+
+</body>
+</html>
